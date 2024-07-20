@@ -1,0 +1,92 @@
+[gd_scene load_steps=12 format=3 uid="uid://lhqqj6mjge63"]
+
+[ext_resource type="Script" path="res://scripts/enemy.gd" id="1_4v62j"]
+[ext_resource type="Texture2D" uid="uid://76sh82rm5cyt" path="res://assets/PNG/Players/Player Blue/playerBlue_swim1.png" id="1_hf0ud"]
+[ext_resource type="Texture2D" uid="uid://dpnclp144bh6f" path="res://assets/PNG/Players/Player Blue/playerBlue_swim2.png" id="2_7sx1k"]
+[ext_resource type="Texture2D" uid="uid://dulla0gmtqhwe" path="res://assets/PNG/Players/Player Blue/playerBlue_up1.png" id="3_dq8uo"]
+[ext_resource type="Texture2D" uid="uid://b1d6dt3yyrral" path="res://assets/PNG/Players/Player Blue/playerBlue_up2.png" id="4_6j2mo"]
+[ext_resource type="Texture2D" uid="uid://bm55y02q6syx1" path="res://assets/PNG/Players/Player Blue/playerBlue_roll.png" id="5_5sgsf"]
+[ext_resource type="Texture2D" uid="uid://crcmhv1qfm87s" path="res://assets/PNG/Players/Player Blue/playerBlue_stand.png" id="5_vwsay"]
+[ext_resource type="Texture2D" uid="uid://dm38ojqn4e83q" path="res://assets/PNG/Players/Player Blue/playerBlue_dead.png" id="8_mw2c0"]
+[ext_resource type="Texture2D" uid="uid://ckcpefbjvmade" path="res://assets/PNG/Items/yellowGem.png" id="9_xagyu"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cb5w5"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_hf0ud")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_7sx1k")
+}],
+"loop": true,
+"name": &"chase_horizontal",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_dq8uo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_6j2mo")
+}],
+"loop": true,
+"name": &"chase_vertical",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_5sgsf")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_vwsay")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_mw2c0")
+}],
+"loop": true,
+"name": &"defeat",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_61kf4"]
+radius = 22.0
+height = 66.0
+
+[node name="EnemyBlue" type="RigidBody2D"]
+collision_layer = 2
+collision_mask = 7
+gravity_scale = 0.0
+max_contacts_reported = 1
+contact_monitor = true
+script = ExtResource("1_4v62j")
+metadata/enemy_type = 0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(1, 1.14)
+sprite_frames = SubResource("SpriteFrames_cb5w5")
+animation = &"defeat"
+autoplay = "default"
+frame_progress = 0.055183
+
+[node name="EnemyCollider" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_61kf4")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+
+[node name="KillTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="ConnectionIndicator" type="Sprite2D" parent="."]
+visible = false
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("9_xagyu")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]
+[connection signal="timeout" from="KillTimer" to="." method="_on_kill_timer_timeout"]

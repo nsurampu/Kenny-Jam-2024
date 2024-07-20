@@ -1,0 +1,90 @@
+[gd_scene load_steps=12 format=3 uid="uid://dg6q6gebi0yhy"]
+
+[ext_resource type="Texture2D" uid="uid://cxvsttmdlk4eo" path="res://assets/PNG/Players/Player Red/playerRed_swim1.png" id="1_77epn"]
+[ext_resource type="Script" path="res://scripts/enemy.gd" id="1_wdox2"]
+[ext_resource type="Texture2D" uid="uid://cgdiepmlik46w" path="res://assets/PNG/Players/Player Red/playerRed_swim2.png" id="2_edjob"]
+[ext_resource type="Texture2D" uid="uid://cjhwseb138814" path="res://assets/PNG/Players/Player Red/playerRed_up1.png" id="3_cne82"]
+[ext_resource type="Texture2D" uid="uid://cg41hrmljxshh" path="res://assets/PNG/Players/Player Red/playerRed_up2.png" id="4_xrg06"]
+[ext_resource type="Texture2D" uid="uid://djl7m25hging0" path="res://assets/PNG/Players/Player Red/playerRed_roll.png" id="5_3tmaj"]
+[ext_resource type="Texture2D" uid="uid://by3trmup1gb17" path="res://assets/PNG/Players/Player Red/playerRed_stand.png" id="7_c1e66"]
+[ext_resource type="Texture2D" uid="uid://cl3fegn10o63c" path="res://assets/PNG/Players/Player Red/playerRed_dead.png" id="8_dkk0k"]
+[ext_resource type="Texture2D" uid="uid://ckcpefbjvmade" path="res://assets/PNG/Items/yellowGem.png" id="9_n085e"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cb5w5"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_77epn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_edjob")
+}],
+"loop": true,
+"name": &"chase_horizontal",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_cne82")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_xrg06")
+}],
+"loop": true,
+"name": &"chase_vertical",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_3tmaj")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_c1e66")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_dkk0k")
+}],
+"loop": true,
+"name": &"defeat",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uyv1u"]
+size = Vector2(41, 56)
+
+[node name="EnemyRed" type="RigidBody2D"]
+collision_layer = 2
+collision_mask = 7
+gravity_scale = 0.0
+max_contacts_reported = 1
+contact_monitor = true
+script = ExtResource("1_wdox2")
+metadata/enemy_type = 2
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(1, 1.14)
+sprite_frames = SubResource("SpriteFrames_cb5w5")
+animation = &"defeat"
+autoplay = "default"
+
+[node name="EnemyCollider" type="CollisionShape2D" parent="."]
+position = Vector2(0.5, 0)
+shape = SubResource("RectangleShape2D_uyv1u")
+
+[node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="."]
+
+[node name="KillTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="ConnectionIndicator" type="Sprite2D" parent="."]
+visible = false
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("9_n085e")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="KillTimer" to="." method="_on_kill_timer_timeout"]

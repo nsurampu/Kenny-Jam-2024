@@ -1,0 +1,94 @@
+[gd_scene load_steps=12 format=3 uid="uid://c15ytrcmet8bv"]
+
+[ext_resource type="Texture2D" uid="uid://c27ts2spmr48v" path="res://assets/PNG/Players/Player Grey/playerGrey_swim1.png" id="1_1drwf"]
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_dkjvy"]
+[ext_resource type="Texture2D" uid="uid://dfgb3kmxu3bkx" path="res://assets/PNG/Players/Player Grey/playerGrey_swim2.png" id="2_aphqy"]
+[ext_resource type="Texture2D" uid="uid://bqc5678sjejdf" path="res://assets/PNG/Players/Player Grey/playerGrey_up1.png" id="3_r75ow"]
+[ext_resource type="Texture2D" uid="uid://b0xnabu6qsm8s" path="res://assets/PNG/Players/Player Grey/playerGrey_up2.png" id="4_guu6y"]
+[ext_resource type="Texture2D" uid="uid://cr0jc8niamcie" path="res://assets/PNG/Players/Player Grey/playerGrey_stand.png" id="5_oixur"]
+[ext_resource type="Texture2D" uid="uid://trcxge7s4k4t" path="res://assets/PNG/Players/Player Grey/playerGrey_roll.png" id="6_m7dj6"]
+[ext_resource type="Texture2D" uid="uid://jbwp22qy5u04" path="res://assets/PNG/Players/Player Grey/playerGrey_dead.png" id="7_wfj1t"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_uynv0"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_1drwf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_aphqy")
+}],
+"loop": true,
+"name": &"chase_horizontal",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_r75ow")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_guu6y")
+}],
+"loop": true,
+"name": &"chase_vertical",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_oixur")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_m7dj6")
+}],
+"loop": true,
+"name": &"connect",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_wfj1t")
+}],
+"loop": true,
+"name": &"defeat",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_oixur")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_q5ss4"]
+radius = 24.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_e5n35"]
+radius = 128.0
+
+[node name="Player" type="RigidBody2D"]
+collision_mask = 2
+gravity_scale = 0.0
+max_contacts_reported = 1
+contact_monitor = true
+script = ExtResource("1_dkjvy")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_uynv0")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="PlayerCollider" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_q5ss4")
+
+[node name="ConnectionArea" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 2
+
+[node name="ConnectionCollider" type="CollisionShape2D" parent="ConnectionArea"]
+shape = SubResource("CircleShape2D_e5n35")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="area_entered" from="ConnectionArea" to="." method="_on_connection_area_area_entered"]
+[connection signal="body_entered" from="ConnectionArea" to="." method="_on_connection_area_body_entered"]

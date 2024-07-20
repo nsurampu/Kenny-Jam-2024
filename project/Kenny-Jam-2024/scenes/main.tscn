@@ -1,0 +1,106 @@
+[gd_scene load_steps=11 format=3 uid="uid://bck8w2cd2j1o8"]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_3rjd3"]
+[ext_resource type="PackedScene" uid="uid://lhqqj6mjge63" path="res://scenes/enemy_blue.tscn" id="2_mhggg"]
+[ext_resource type="PackedScene" uid="uid://dg6q6gebi0yhy" path="res://scenes/enemy_red.tscn" id="3_s5m6a"]
+[ext_resource type="PackedScene" uid="uid://btshjo10rg3lw" path="res://scenes/enemy_green.tscn" id="4_18vd3"]
+[ext_resource type="Texture2D" uid="uid://dbr2d2trawsvn" path="res://assets/PNG/Backgrounds/set2_background.png" id="5_5jhmt"]
+[ext_resource type="PackedScene" uid="uid://c15ytrcmet8bv" path="res://scenes/player.tscn" id="5_8svx4"]
+[ext_resource type="Texture2D" uid="uid://3nxiaxgiv58k" path="res://assets/PNG/Backgrounds/set2_tiles.png" id="6_22qci"]
+[ext_resource type="Texture2D" uid="uid://delsuurburlv6" path="res://assets/PNG/Backgrounds/set2_hills.png" id="7_4mq3k"]
+[ext_resource type="FontFile" uid="uid://dswr1ry85ech5" path="res://assets/Fonts/Kenney Blocks.ttf" id="9_nudby"]
+
+[sub_resource type="Curve2D" id="Curve2D_mb7xr"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 640, 0, 0, 0, 0, 0, 1280, 0, 0, 0, 0, 0, 1280, 320, 0, 0, 0, 0, 1280, 720, 0, 0, 0, 0, 640, 720, 0, 0, 0, 0, 0, 720, 0, 0, 0, 0, 0, 360, 0, 0, 0, 0, 0, 0)
+}
+point_count = 9
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_3rjd3")
+blue_enemy = ExtResource("2_mhggg")
+red_enemy = ExtResource("3_s5m6a")
+green_enemy = ExtResource("4_18vd3")
+
+[node name="Background" type="Node" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="Background"]
+z_index = -5
+position = Vector2(656, 352)
+scale = Vector2(2.275, 1.63333)
+texture = ExtResource("5_5jhmt")
+
+[node name="Sprite2D2" type="Sprite2D" parent="Background"]
+z_index = -5
+position = Vector2(248, 184)
+scale = Vector2(0.6875, 0.683333)
+texture = ExtResource("6_22qci")
+
+[node name="Sprite2D6" type="Sprite2D" parent="Background"]
+z_index = -5
+position = Vector2(1400, 360)
+scale = Vector2(1.9875, 1.48333)
+texture = ExtResource("7_4mq3k")
+
+[node name="Sprite2D3" type="Sprite2D" parent="Background"]
+z_index = -5
+position = Vector2(344, 360)
+scale = Vector2(1.9875, 1.48333)
+texture = ExtResource("7_4mq3k")
+
+[node name="Sprite2D4" type="Sprite2D" parent="Background"]
+z_index = -5
+position = Vector2(920, 424)
+scale = Vector2(0.505988, 0.44463)
+texture = ExtResource("6_22qci")
+
+[node name="Sprite2D5" type="Sprite2D" parent="Background"]
+z_index = -5
+position = Vector2(640, 360)
+rotation = 3.14159
+scale = Vector2(2, 1.5)
+texture = ExtResource("7_4mq3k")
+
+[node name="Player" parent="." instance=ExtResource("5_8svx4")]
+
+[node name="EnemySpawnPath" type="Path2D" parent="."]
+curve = SubResource("Curve2D_mb7xr")
+
+[node name="EnemySpawnLocation" type="PathFollow2D" parent="EnemySpawnPath"]
+
+[node name="SpawnTimer" type="Timer" parent="."]
+wait_time = 2.0
+
+[node name="PlayerSpawn" type="Marker2D" parent="."]
+position = Vector2(640, 320)
+
+[node name="Score" type="RichTextLabel" parent="."]
+offset_left = 18.0
+offset_top = 4.0
+offset_right = 394.0
+offset_bottom = 52.0
+theme_override_fonts/normal_font = ExtResource("9_nudby")
+theme_override_font_sizes/normal_font_size = 30
+text = "High Score: 99999"
+
+[node name="TotalChainSize" type="RichTextLabel" parent="."]
+offset_left = 816.0
+offset_top = 4.0
+offset_right = 1264.0
+offset_bottom = 44.0
+theme_override_fonts/normal_font = ExtResource("9_nudby")
+theme_override_font_sizes/normal_font_size = 25
+text = "Current Chain Size: 99999"
+text_direction = 2
+
+[node name="BestChainSize" type="RichTextLabel" parent="."]
+offset_left = 840.0
+offset_top = 44.0
+offset_right = 1264.0
+offset_bottom = 100.0
+theme_override_fonts/normal_font = ExtResource("9_nudby")
+theme_override_font_sizes/normal_font_size = 25
+text = "Connection Power: 99999"
+text_direction = 2
+
+[connection signal="timeout" from="SpawnTimer" to="." method="_on_spawn_timer_timeout"]
