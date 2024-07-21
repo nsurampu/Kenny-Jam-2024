@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bck8w2cd2j1o8"]
+[gd_scene load_steps=18 format=3 uid="uid://bck8w2cd2j1o8"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_3rjd3"]
 [ext_resource type="PackedScene" uid="uid://lhqqj6mjge63" path="res://scenes/enemy_blue.tscn" id="2_mhggg"]
@@ -8,7 +8,14 @@
 [ext_resource type="PackedScene" uid="uid://c15ytrcmet8bv" path="res://scenes/player.tscn" id="5_8svx4"]
 [ext_resource type="Texture2D" uid="uid://3nxiaxgiv58k" path="res://assets/PNG/Backgrounds/set2_tiles.png" id="6_22qci"]
 [ext_resource type="Texture2D" uid="uid://delsuurburlv6" path="res://assets/PNG/Backgrounds/set2_hills.png" id="7_4mq3k"]
+[ext_resource type="AudioStream" uid="uid://cicjanfyfr0hc" path="res://assets/Audio/click3.ogg" id="9_ck87i"]
 [ext_resource type="FontFile" uid="uid://dswr1ry85ech5" path="res://assets/Fonts/Kenney Blocks.ttf" id="9_nudby"]
+[ext_resource type="Texture2D" uid="uid://dr4wajb3u6ebo" path="res://assets/PNG/Items/buttonRed.png" id="10_e8y6g"]
+[ext_resource type="FontFile" uid="uid://cln7guhbwbvju" path="res://assets/Fonts/Kenney Future.ttf" id="11_k4qld"]
+[ext_resource type="AudioStream" uid="uid://bkpkc5cju566e" path="res://assets/Audio/Mission Plausible.ogg" id="12_fl8o6"]
+[ext_resource type="AudioStream" uid="uid://drk50pc6c1vuv" path="res://assets/Audio/defeat.ogg" id="13_j083e"]
+[ext_resource type="AudioStream" uid="uid://kbslw3ivfqap" path="res://assets/Audio/congratulations.ogg" id="15_s6biq"]
+[ext_resource type="Script" path="res://scripts/title_color_cycler.gd" id="16_1id03"]
 
 [sub_resource type="Curve2D" id="Curve2D_mb7xr"]
 _data = {
@@ -21,6 +28,7 @@ script = ExtResource("1_3rjd3")
 blue_enemy = ExtResource("2_mhggg")
 red_enemy = ExtResource("3_s5m6a")
 green_enemy = ExtResource("4_18vd3")
+enemy_limit = 1000
 
 [node name="Background" type="Node" parent="."]
 
@@ -61,7 +69,20 @@ rotation = 3.14159
 scale = Vector2(2, 1.5)
 texture = ExtResource("7_4mq3k")
 
+[node name="Start" type="Button" parent="."]
+process_mode = 2
+offset_left = 512.0
+offset_top = 248.0
+offset_right = 776.0
+offset_bottom = 316.0
+theme_override_fonts/font = ExtResource("9_nudby")
+theme_override_font_sizes/font_size = 40
+text = "START
+"
+
 [node name="Player" parent="." instance=ExtResource("5_8svx4")]
+visible = false
+position = Vector2(640, 320)
 
 [node name="EnemySpawnPath" type="Path2D" parent="."]
 curve = SubResource("Curve2D_mb7xr")
@@ -69,38 +90,184 @@ curve = SubResource("Curve2D_mb7xr")
 [node name="EnemySpawnLocation" type="PathFollow2D" parent="EnemySpawnPath"]
 
 [node name="SpawnTimer" type="Timer" parent="."]
-wait_time = 2.0
+wait_time = 1.5
 
 [node name="PlayerSpawn" type="Marker2D" parent="."]
 position = Vector2(640, 320)
 
 [node name="Score" type="RichTextLabel" parent="."]
+visible = false
 offset_left = 18.0
 offset_top = 4.0
-offset_right = 394.0
-offset_bottom = 52.0
-theme_override_fonts/normal_font = ExtResource("9_nudby")
-theme_override_font_sizes/normal_font_size = 30
-text = "High Score: 99999"
+offset_right = 386.0
+offset_bottom = 56.0
+theme_override_colors/default_color = Color(0.537786, 1, 0.506004, 1)
+theme_override_fonts/normal_font = ExtResource("11_k4qld")
+theme_override_font_sizes/normal_font_size = 40
+text = "Score: 0"
+
+[node name="SessionScore" type="RichTextLabel" parent="."]
+visible = false
+offset_left = 18.0
+offset_top = 56.0
+offset_right = 360.0
+offset_bottom = 88.0
+theme_override_colors/default_color = Color(0.537786, 1, 0.506004, 1)
+theme_override_fonts/normal_font = ExtResource("11_k4qld")
+theme_override_font_sizes/normal_font_size = 20
+text = "Session High Score: 0
+"
 
 [node name="TotalChainSize" type="RichTextLabel" parent="."]
+visible = false
 offset_left = 816.0
 offset_top = 4.0
 offset_right = 1264.0
-offset_bottom = 44.0
-theme_override_fonts/normal_font = ExtResource("9_nudby")
+offset_bottom = 40.0
+theme_override_colors/default_color = Color(0, 1, 1, 1)
+theme_override_fonts/normal_font = ExtResource("11_k4qld")
 theme_override_font_sizes/normal_font_size = 25
-text = "Current Chain Size: 99999"
+text = "Current Chain Size: 0"
 text_direction = 2
 
 [node name="BestChainSize" type="RichTextLabel" parent="."]
+visible = false
 offset_left = 840.0
-offset_top = 44.0
+offset_top = 40.0
 offset_right = 1264.0
-offset_bottom = 100.0
-theme_override_fonts/normal_font = ExtResource("9_nudby")
+offset_bottom = 76.0
+theme_override_colors/default_color = Color(0, 1, 1, 1)
+theme_override_fonts/normal_font = ExtResource("11_k4qld")
 theme_override_font_sizes/normal_font_size = 25
-text = "Connection Power: 99999"
+text = "Connection Power: 0"
 text_direction = 2
 
+[node name="ConnectorStatus" type="RichTextLabel" parent="."]
+visible = false
+offset_left = 1008.0
+offset_top = 120.0
+offset_right = 1232.0
+offset_bottom = 160.0
+theme_override_colors/default_color = Color(1, 0.980392, 0, 1)
+theme_override_fonts/normal_font = ExtResource("11_k4qld")
+theme_override_font_sizes/normal_font_size = 25
+text = "VAB: OFFLINE"
+
+[node name="ConnectorPower" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(1256, 132)
+scale = Vector2(0.66, 0.827586)
+texture = ExtResource("10_e8y6g")
+
+[node name="Multiplier" type="RichTextLabel" parent="."]
+visible = false
+offset_left = 848.0
+offset_top = 80.0
+offset_right = 1264.0
+offset_bottom = 112.0
+theme_override_colors/default_color = Color(0, 1, 1, 1)
+theme_override_fonts/normal_font = ExtResource("11_k4qld")
+theme_override_font_sizes/normal_font_size = 25
+text = "Score Multiplier: x1"
+text_direction = 2
+
+[node name="EndMessage" type="RichTextLabel" parent="."]
+visible = false
+offset_left = 128.0
+offset_top = 330.0
+offset_right = 1152.0
+offset_bottom = 413.0
+theme_override_colors/default_color = Color(0.882353, 0, 0.113725, 1)
+theme_override_fonts/normal_font = ExtResource("11_k4qld")
+theme_override_font_sizes/normal_font_size = 50
+bbcode_enabled = true
+text = "[center]End Message"
+
+[node name="FinishMessage" type="RichTextLabel" parent="."]
+visible = false
+offset_left = 408.0
+offset_top = 330.0
+offset_right = 868.0
+offset_bottom = 410.0
+theme_override_colors/default_color = Color(0, 1, 0, 1)
+theme_override_fonts/normal_font = ExtResource("11_k4qld")
+theme_override_font_sizes/normal_font_size = 50
+bbcode_enabled = true
+text = "[center]You Survived"
+
+[node name="ControlScheme" type="RichTextLabel" parent="."]
+offset_left = 48.0
+offset_top = 464.0
+offset_right = 1248.0
+offset_bottom = 720.0
+theme_override_colors/default_color = Color(0.537786, 1, 0.506004, 1)
+theme_override_fonts/normal_font = ExtResource("11_k4qld")
+theme_override_font_sizes/normal_font_size = 20
+bbcode_enabled = true
+text = "[center]Objective
+Takeout as many enemies as possible without getting hit
+
+Weapon: The VAB
+Indicated by Amber area, Left Click Mouse to connect enemies within Aura. Connected enemies are indicated by glowing amber
+
+Attack Chain
+Bigger the chain, better the score. Right Click Mouse to activate the VAB and trigger chain to defeat connected enemies. Ehance score by connecting as many similar enemies as possible"
+
+[node name="BackgroundBGM" type="AudioStreamPlayer2D" parent="."]
+process_mode = 3
+stream = ExtResource("12_fl8o6")
+autoplay = true
+
+[node name="GameEnd" type="AudioStreamPlayer2D" parent="."]
+process_mode = 3
+stream = ExtResource("13_j083e")
+
+[node name="ButtonClick" type="AudioStreamPlayer2D" parent="."]
+process_mode = 3
+stream = ExtResource("9_ck87i")
+bus = &"SFX"
+
+[node name="GameFinish" type="AudioStreamPlayer2D" parent="."]
+process_mode = 3
+stream = ExtResource("15_s6biq")
+
+[node name="ScoreOverview" type="RichTextLabel" parent="."]
+offset_left = 352.0
+offset_top = 128.0
+offset_right = 936.0
+offset_bottom = 176.0
+theme_override_colors/default_color = Color(0.537255, 1, 0.505882, 1)
+theme_override_fonts/normal_font = ExtResource("11_k4qld")
+theme_override_font_sizes/normal_font_size = 40
+bbcode_enabled = true
+text = "[center]Score: 0"
+
+[node name="SessionScoreOverview" type="RichTextLabel" parent="."]
+offset_left = 248.0
+offset_top = 184.0
+offset_right = 1032.0
+offset_bottom = 232.0
+theme_override_colors/default_color = Color(0.537786, 1, 0.506004, 1)
+theme_override_fonts/normal_font = ExtResource("11_k4qld")
+theme_override_font_sizes/normal_font_size = 40
+bbcode_enabled = true
+text = "[center]Session High Score: 0"
+
+[node name="Title" type="RichTextLabel" parent="."]
+process_mode = 2
+offset_left = 280.0
+offset_right = 1016.0
+offset_bottom = 96.0
+theme_override_fonts/normal_font = ExtResource("11_k4qld")
+theme_override_font_sizes/normal_font_size = 80
+bbcode_enabled = true
+text = "[center]Chain Swarm"
+script = ExtResource("16_1id03")
+
+[node name="TitleCycleCounter" type="Timer" parent="Title"]
+wait_time = 0.25
+autostart = true
+
+[connection signal="pressed" from="Start" to="." method="_on_button_pressed"]
 [connection signal="timeout" from="SpawnTimer" to="." method="_on_spawn_timer_timeout"]
+[connection signal="timeout" from="Title/TitleCycleCounter" to="Title" method="_on_title_cycle_counter_timeout"]

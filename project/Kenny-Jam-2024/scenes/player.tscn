@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://c15ytrcmet8bv"]
+[gd_scene load_steps=15 format=3 uid="uid://c15ytrcmet8bv"]
 
 [ext_resource type="Texture2D" uid="uid://c27ts2spmr48v" path="res://assets/PNG/Players/Player Grey/playerGrey_swim1.png" id="1_1drwf"]
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_dkjvy"]
@@ -8,6 +8,9 @@
 [ext_resource type="Texture2D" uid="uid://cr0jc8niamcie" path="res://assets/PNG/Players/Player Grey/playerGrey_stand.png" id="5_oixur"]
 [ext_resource type="Texture2D" uid="uid://trcxge7s4k4t" path="res://assets/PNG/Players/Player Grey/playerGrey_roll.png" id="6_m7dj6"]
 [ext_resource type="Texture2D" uid="uid://jbwp22qy5u04" path="res://assets/PNG/Players/Player Grey/playerGrey_dead.png" id="7_wfj1t"]
+[ext_resource type="Texture2D" uid="uid://bkpuodwa5ojov" path="res://assets/PNG/Players/Player Grey/playerGrey_duck.png" id="9_3cckh"]
+[ext_resource type="AudioStream" uid="uid://07co42m3cjeg" path="res://assets/Audio/forceField_001.ogg" id="10_0m6py"]
+[ext_resource type="AudioStream" uid="uid://dep2oqtvg0i6i" path="res://assets/Audio/laserSmall_003.ogg" id="11_hyy03"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_uynv0"]
 animations = [{
@@ -55,6 +58,9 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("5_oixur")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_3cckh")
 }],
 "loop": true,
 "name": &"idle",
@@ -68,6 +74,7 @@ radius = 24.0
 radius = 128.0
 
 [node name="Player" type="RigidBody2D"]
+z_index = -1
 collision_mask = 2
 gravity_scale = 0.0
 max_contacts_reported = 1
@@ -76,19 +83,40 @@ script = ExtResource("1_dkjvy")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_uynv0")
-animation = &"idle"
+animation = &"defeat"
 autoplay = "idle"
 
 [node name="PlayerCollider" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_q5ss4")
 
 [node name="ConnectionArea" type="Area2D" parent="."]
+z_index = -2
 collision_layer = 4
 collision_mask = 2
 
 [node name="ConnectionCollider" type="CollisionShape2D" parent="ConnectionArea"]
 shape = SubResource("CircleShape2D_e5n35")
 
+[node name="Polygon2D" type="Polygon2D" parent="ConnectionArea"]
+color = Color(1, 0.745098, 0, 0.392157)
+polygon = PackedVector2Array(0, -128, 33, -124, 64, -111, 90, -91, 111, -64, 124, -33, 128, 0, 124, 33, 111, 64, 90, 91, 64, 111, 33, 124, 0, 128, -33, 124, -64, 111, -90, 91, -111, 64, -124, 33, -128, 0, -124, -33, -111, -64, -91, -90, -64, -111, -33, -124)
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+
+[node name="OffscreenTimer" type="Timer" parent="."]
+wait_time = 3.0
+
+[node name="AuraField" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("10_0m6py")
+bus = &"SFX"
+
+[node name="Burst" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("11_hyy03")
+bus = &"SFX"
+
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="area_entered" from="ConnectionArea" to="." method="_on_connection_area_area_entered"]
 [connection signal="body_entered" from="ConnectionArea" to="." method="_on_connection_area_body_entered"]
+[connection signal="screen_entered" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_entered"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]
+[connection signal="timeout" from="OffscreenTimer" to="." method="_on_offscreen_timer_timeout"]

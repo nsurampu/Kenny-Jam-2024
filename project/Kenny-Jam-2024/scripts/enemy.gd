@@ -8,6 +8,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	
 	pass
 
 
@@ -23,6 +24,10 @@ func _on_visible_on_screen_notifier_2d_screen_exited():
 func kill_enemy():
 	$AnimatedSprite2D.animation = "defeat"
 	$KillTimer.start()
+	
+	
+func destroy_enemy():
+	queue_free()
 
 
 func _on_kill_timer_timeout():

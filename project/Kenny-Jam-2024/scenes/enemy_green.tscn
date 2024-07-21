@@ -1,11 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://btshjo10rg3lw"]
+[gd_scene load_steps=9 format=3 uid="uid://btshjo10rg3lw"]
 
-[ext_resource type="Texture2D" uid="uid://t440nv50qttc" path="res://assets/PNG/Players/Player Green/playerGreen_swim2.png" id="1_b4vkt"]
 [ext_resource type="Script" path="res://scripts/enemy.gd" id="1_bn8qp"]
-[ext_resource type="Texture2D" uid="uid://d2dtuavhiwps7" path="res://assets/PNG/Players/Player Green/playerGreen_swim1.png" id="2_20fab"]
-[ext_resource type="Texture2D" uid="uid://bcqtrjrdm2fi2" path="res://assets/PNG/Players/Player Green/playerGreen_up1.png" id="3_fqcgc"]
-[ext_resource type="Texture2D" uid="uid://bjt32ihxvq0dg" path="res://assets/PNG/Players/Player Green/playerGreen_up2.png" id="4_2hc85"]
-[ext_resource type="Texture2D" uid="uid://b24j1tphpngo8" path="res://assets/PNG/Players/Player Green/playerGreen_roll.png" id="5_vrhnu"]
+[ext_resource type="Texture2D" uid="uid://1a44fh6mjc2c" path="res://assets/PNG/Players/Player Green/playerGreen_walk5.png" id="2_tnetg"]
+[ext_resource type="Texture2D" uid="uid://jjiknrnrt00s" path="res://assets/PNG/Players/Player Green/playerGreen_walk4.png" id="3_5e1bh"]
 [ext_resource type="Texture2D" uid="uid://b1o5ip4vyxswc" path="res://assets/PNG/Players/Player Green/playerGreen_stand.png" id="7_ijq41"]
 [ext_resource type="Texture2D" uid="uid://c14kkr3k6g2wi" path="res://assets/PNG/Players/Player Green/playerGreen_dead.png" id="8_66lsa"]
 [ext_resource type="Texture2D" uid="uid://ckcpefbjvmade" path="res://assets/PNG/Items/yellowGem.png" id="9_le4rd"]
@@ -14,29 +11,10 @@
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_b4vkt")
+"texture": ExtResource("2_tnetg")
 }, {
 "duration": 1.0,
-"texture": ExtResource("2_20fab")
-}],
-"loop": true,
-"name": &"chase_horizontal",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("3_fqcgc")
-}, {
-"duration": 1.0,
-"texture": ExtResource("4_2hc85")
-}],
-"loop": true,
-"name": &"chase_vertical",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("5_vrhnu")
+"texture": ExtResource("3_5e1bh")
 }],
 "loop": true,
 "name": &"default",
@@ -55,9 +33,10 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4eo52"]
-radius = 32.0
+radius = 23.0
 
 [node name="EnemyGreen" type="RigidBody2D"]
+z_index = -1
 collision_layer = 2
 collision_mask = 7
 gravity_scale = 0.0
@@ -69,23 +48,23 @@ metadata/enemy_type = 1
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 scale = Vector2(1, 1.14)
 sprite_frames = SubResource("SpriteFrames_cb5w5")
-animation = &"defeat"
 autoplay = "default"
-frame = 1
-frame_progress = 0.65284
 
 [node name="EnemyCollider" type="CollisionShape2D" parent="."]
+position = Vector2(-1, 0)
 shape = SubResource("CircleShape2D_4eo52")
 
-[node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="."]
-
 [node name="KillTimer" type="Timer" parent="."]
+wait_time = 0.25
 one_shot = true
 
 [node name="ConnectionIndicator" type="Sprite2D" parent="."]
 visible = false
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.75, 0.75)
 texture = ExtResource("9_le4rd")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="timeout" from="KillTimer" to="." method="_on_kill_timer_timeout"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

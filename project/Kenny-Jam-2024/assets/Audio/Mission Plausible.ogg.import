@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://bkpkc5cju566e"
+path="res://.godot/imported/Mission Plausible.ogg-cdbd2e07c922b5d96ab72e01a39f6f02.oggvorbisstr"
+
+[deps]
+
+source_file="res://assets/Audio/Mission Plausible.ogg"
+dest_files=["res://.godot/imported/Mission Plausible.ogg-cdbd2e07c922b5d96ab72e01a39f6f02.oggvorbisstr"]
+
+[params]
+
+loop=true
+loop_offset=0.0
+bpm=0.0
+beat_count=0
+bar_beats=4
