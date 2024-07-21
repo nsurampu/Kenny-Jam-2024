@@ -1,5 +1,5 @@
-# itch.io
-[href]https://rabidclown.itch.io/chain-swarm
+# Chain Swarm
+https://rabidclown.itch.io/chain-swarm
 
 ## Description
 Once upon a time, on a planet far distant from ours, there lived 4 tribes in harmony. That changed when a neuro-parasite spread through the entire planet, turning everyone into drones that attacked the non-infected.
